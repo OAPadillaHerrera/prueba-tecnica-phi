@@ -2,6 +2,8 @@
 
 <?php
 
-echo "Hola PHP";
+require "config/database.php";
+
+echo "Conexión OK";
 
 ?>
