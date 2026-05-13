@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("formUsuario");
 
-    form.addEventListener("submit", function(e) {
+    form.addEventListener("submit", function (e) {
 
         const inputs = this.querySelectorAll("input:not([type='hidden'])");
 
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!nombreRegex.test(nombre)) {
             e.preventDefault();
-            alert("Nombre inválido (solo letras, mínimo 2 caracteres)");
+            alert("Nombre inválido");
             return;
         }
 
@@ -41,19 +41,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!textoRegex.test(ciudad)) {
             e.preventDefault();
-            alert("Ciudad inválida (solo letras)");
+            alert("Ciudad inválida");
             return;
         }
 
         if (!textoRegex.test(pais)) {
             e.preventDefault();
-            alert("País inválido (solo letras)");
+            alert("País inválido");
             return;
         }
 
         if (!celularRegex.test(celular)) {
             e.preventDefault();
-            alert("Celular inválido (solo números, mínimo 7 dígitos)");
+            alert("Celular inválido");
             return;
         }
 

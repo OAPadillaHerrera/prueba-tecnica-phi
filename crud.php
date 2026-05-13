@@ -9,6 +9,7 @@ $stmt->execute();
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $editData = null;
+$error = "";
 
 if (isset($_GET['edit'])) {
 
@@ -38,66 +39,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         empty($pais) ||
         empty($celular)
     ) {
-        die("Todos los campos son obligatorios");
+        $error = "Todos los campos son obligatorios";
     }
 
-    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/', $nombre)) {
-        die("Nombre inválido");
+    if (!$error && !preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/', $nombre)) {
+        $error = "Nombre inválido";
     }
 
-    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        die("Correo inválido");
+    if (!$error && !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        $error = "Correo inválido";
     }
 
-    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $ciudad)) {
-        die("Ciudad inválida");
+    if (!$error && !preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $ciudad)) {
+        $error = "Ciudad inválida";
     }
 
-    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $pais)) {
-        die("País inválido");
+    if (!$error && !preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $pais)) {
+        $error = "País inválido";
     }
 
-    if (!preg_match('/^[0-9]{7,}$/', $celular)) {
-        die("Celular inválido");
+    if (!$error && !preg_match('/^[0-9]{7,}$/', $celular)) {
+        $error = "Celular inválido";
     }
 
-    try {
+    if (!$error) {
 
-        if ($id == "") {
+        try {
 
-            $sql = "INSERT INTO usuarios (nombre, correo, ciudad, pais, celular)
-                    VALUES (:nombre, :correo, :ciudad, :pais, :celular)";
+            if ($id == "") {
 
-            $stmt = $conn->prepare($sql);
+                $sql = "INSERT INTO usuarios (nombre, correo, ciudad, pais, celular)
+                        VALUES (:nombre, :correo, :ciudad, :pais, :celular)";
 
-        } else {
+                $stmt = $conn->prepare($sql);
 
-            $sql = "UPDATE usuarios 
-                    SET nombre=:nombre, correo=:correo, ciudad=:ciudad, pais=:pais, celular=:celular
-                    WHERE id=:id";
+            } else {
 
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':id', $id);
+                $sql = "UPDATE usuarios 
+                        SET nombre=:nombre, correo=:correo, ciudad=:ciudad, pais=:pais, celular=:celular
+                        WHERE id=:id";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':id', $id);
+            }
+
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':correo', $correo);
+            $stmt->bindParam(':ciudad', $ciudad);
+            $stmt->bindParam(':pais', $pais);
+            $stmt->bindParam(':celular', $celular);
+
+            $stmt->execute();
+
+            header("Location: index.php");
+            exit;
+
+        } catch (PDOException $e) {
+
+            if ($e->getCode() == 23000) {
+                $error = "Este correo ya está registrado";
+            } else {
+                $error = "Error en la base de datos";
+            }
         }
-
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':correo', $correo);
-        $stmt->bindParam(':ciudad', $ciudad);
-        $stmt->bindParam(':pais', $pais);
-        $stmt->bindParam(':celular', $celular);
-
-        $stmt->execute();
-
-        header("Location: index.php");
-        exit;
-
-    } catch (PDOException $e) {
-
-        if ($e->getCode() == 23000) {
-            die("Este correo ya está registrado");
-        }
-
-        die("Error en la base de datos");
     }
 }
 

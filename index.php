@@ -18,6 +18,12 @@ require "crud.php";
 
 <h2>Registro de Usuarios</h2>
 
+<?php if (!empty($error)): ?>
+    <div class="alert alert-danger">
+        <?= $error ?>
+    </div>
+<?php endif; ?>
+
 <form method="POST" id="formUsuario" novalidate>
 
     <input type="hidden" name="id" value="<?= $editData['id'] ?? '' ?>">
