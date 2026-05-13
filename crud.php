@@ -41,33 +41,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Todos los campos son obligatorios");
     }
 
-    if ($id == "") {
+    try {
 
-        $sql = "INSERT INTO usuarios (nombre, correo, ciudad, pais, celular)
-                VALUES (:nombre, :correo, :ciudad, :pais, :celular)";
+        if ($id == "") {
 
-        $stmt = $conn->prepare($sql);
+            $sql = "INSERT INTO usuarios (nombre, correo, ciudad, pais, celular)
+                    VALUES (:nombre, :correo, :ciudad, :pais, :celular)";
 
-    } else {
+            $stmt = $conn->prepare($sql);
 
-        $sql = "UPDATE usuarios 
-                SET nombre=:nombre, correo=:correo, ciudad=:ciudad, pais=:pais, celular=:celular
-                WHERE id=:id";
+        } else {
 
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
+            $sql = "UPDATE usuarios 
+                    SET nombre=:nombre, correo=:correo, ciudad=:ciudad, pais=:pais, celular=:celular
+                    WHERE id=:id";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id', $id);
+        }
+
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':correo', $correo);
+        $stmt->bindParam(':ciudad', $ciudad);
+        $stmt->bindParam(':pais', $pais);
+        $stmt->bindParam(':celular', $celular);
+
+        $stmt->execute();
+
+        header("Location: index.php");
+        exit;
+
+    } catch (PDOException $e) {
+
+        if ($e->getCode() == 23000) {
+            die("Este correo ya está registrado");
+        }
+
+        die("Error en la base de datos");
     }
-
-    $stmt->bindParam(':nombre', $nombre);
-    $stmt->bindParam(':correo', $correo);
-    $stmt->bindParam(':ciudad', $ciudad);
-    $stmt->bindParam(':pais', $pais);
-    $stmt->bindParam(':celular', $celular);
-
-    $stmt->execute();
-
-    header("Location: index.php");
-    exit;
 }
 
 if (isset($_GET['delete'])) {
