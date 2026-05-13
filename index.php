@@ -3,77 +3,7 @@
 <?php
 
 require "config/database.php";
-
-if (isset($_GET['delete'])) {
-
-    $id = $_GET['delete'];
-
-    $sql = "DELETE FROM usuarios WHERE id = :id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-
-    header("Location: index.php");
-    exit;
-}
-
-$editData = null;
-
-if (isset($_GET['edit'])) {
-
-    $id = $_GET['edit'];
-
-    $sql = "SELECT * FROM usuarios WHERE id = :id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-
-    $editData = $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-if ($_POST) {
-
-    $id = $_POST['id'];
-    $nombre = $_POST['nombre'];
-    $correo = $_POST['correo'];
-    $ciudad = $_POST['ciudad'];
-    $pais = $_POST['pais'];
-    $celular = $_POST['celular'];
-
-    if ($id == "") {
-
-        $sql = "INSERT INTO usuarios (nombre, correo, ciudad, pais, celular)
-                VALUES (:nombre, :correo, :ciudad, :pais, :celular)";
-
-        $stmt = $conn->prepare($sql);
-
-    } else {
-
-        $sql = "UPDATE usuarios 
-                SET nombre=:nombre, correo=:correo, ciudad=:ciudad, pais=:pais, celular=:celular
-                WHERE id=:id";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
-    }
-
-    $stmt->bindParam(':nombre', $nombre);
-    $stmt->bindParam(':correo', $correo);
-    $stmt->bindParam(':ciudad', $ciudad);
-    $stmt->bindParam(':pais', $pais);
-    $stmt->bindParam(':celular', $celular);
-
-    $stmt->execute();
-
-    header("Location: index.php");
-    exit;
-}
-
-$sql = "SELECT * FROM usuarios";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-
-$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require "crud.php";
 
 ?>
 
@@ -88,24 +18,24 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <h2>Registro de Usuarios</h2>
 
-<form method="POST">
+<form method="POST" id="formUsuario" novalidate>
 
     <input type="hidden" name="id" value="<?= $editData['id'] ?? '' ?>">
 
     <input type="text" name="nombre" class="form-control mb-2"
-    placeholder="Nombre" value="<?= $editData['nombre'] ?? '' ?>" required>
+    placeholder="Nombre" value="<?= $editData['nombre'] ?? '' ?>">
 
     <input type="email" name="correo" class="form-control mb-2"
-    placeholder="Correo" value="<?= $editData['correo'] ?? '' ?>" required>
+    placeholder="Correo" value="<?= $editData['correo'] ?? '' ?>">
 
     <input type="text" name="ciudad" class="form-control mb-2"
-    placeholder="Ciudad" value="<?= $editData['ciudad'] ?? '' ?>" required>
+    placeholder="Ciudad" value="<?= $editData['ciudad'] ?? '' ?>">
 
     <input type="text" name="pais" class="form-control mb-2"
-    placeholder="País" value="<?= $editData['pais'] ?? '' ?>" required>
+    placeholder="País" value="<?= $editData['pais'] ?? '' ?>">
 
     <input type="text" name="celular" class="form-control mb-2"
-    placeholder="Celular" value="<?= $editData['celular'] ?? '' ?>" required>
+    placeholder="Celular" value="<?= $editData['celular'] ?? '' ?>">
 
     <button type="submit" class="btn btn-primary">
         <?= $editData ? "Actualizar" : "Guardar" ?>
@@ -153,6 +83,8 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </tbody>
 
 </table>
+
+<script src="assets/js/validation.js"></script>
 
 </body>
 </html>
