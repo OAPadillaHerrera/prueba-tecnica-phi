@@ -1,6 +1,13 @@
 
 
 <?php
+/*
+    Vista principal del sistema
+    Muestra el formulario y el listado de usuarios.
+*/
+?>
+
+<?php
 
 require "config/database.php";
 require "crud.php";

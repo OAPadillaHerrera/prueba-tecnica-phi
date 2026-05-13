@@ -1,5 +1,10 @@
 
 
+/*
+    Validación frontend
+    Valida campos obligatorios y formatos del formulario.
+*/
+
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("formUsuario");

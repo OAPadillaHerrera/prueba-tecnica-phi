@@ -1,6 +1,13 @@
 
 
 <?php
+/*
+    CRUD principal de usuarios
+    Maneja listado, creación, edición y eliminación de usuarios.
+*/
+?>
+
+<?php
 
 $sql = "SELECT * FROM usuarios";
 $stmt = $conn->prepare($sql);

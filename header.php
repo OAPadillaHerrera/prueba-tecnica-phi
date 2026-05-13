@@ -1,5 +1,12 @@
 
 
+<?php
+/*
+    Header principal
+    Contiene la estructura inicial HTML y los títulos principales.
+*/
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

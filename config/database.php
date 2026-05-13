@@ -1,6 +1,13 @@
 
 
 <?php
+/*
+    Conexión a la base de datos
+    Carga variables de entorno y crea la conexión PDO.
+*/
+?>
+
+<?php
 
 $env = parse_ini_file(__DIR__ . '/../.env');
 

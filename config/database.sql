@@ -1,5 +1,10 @@
 
 
+/*
+    Script de base de datos
+    Crea la base de datos y la tabla usuarios.
+*/
+
 CREATE DATABASE phi_crud;
 
 USE phi_crud;
