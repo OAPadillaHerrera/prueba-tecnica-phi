@@ -25,11 +25,11 @@ if (isset($_GET['edit'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id = $_POST['id'] ?? '';
-    $nombre = $_POST['nombre'] ?? '';
-    $correo = $_POST['correo'] ?? '';
-    $ciudad = $_POST['ciudad'] ?? '';
-    $pais = $_POST['pais'] ?? '';
-    $celular = $_POST['celular'] ?? '';
+    $nombre = trim($_POST['nombre'] ?? '');
+    $correo = trim($_POST['correo'] ?? '');
+    $ciudad = trim($_POST['ciudad'] ?? '');
+    $pais = trim($_POST['pais'] ?? '');
+    $celular = trim($_POST['celular'] ?? '');
 
     if (
         empty($nombre) ||
@@ -39,6 +39,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         empty($celular)
     ) {
         die("Todos los campos son obligatorios");
+    }
+
+    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/', $nombre)) {
+        die("Nombre inválido");
+    }
+
+    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        die("Correo inválido");
+    }
+
+    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $ciudad)) {
+        die("Ciudad inválida");
+    }
+
+    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $pais)) {
+        die("País inválido");
+    }
+
+    if (!preg_match('/^[0-9]{7,}$/', $celular)) {
+        die("Celular inválido");
     }
 
     try {
